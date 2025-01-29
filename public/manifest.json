@@ -1,0 +1,9 @@
+{
+  "name": "QA-Engineer Technical Assessment",
+  "short_name": "Technical Assessment",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": []
+}
