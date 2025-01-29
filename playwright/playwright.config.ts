@@ -1,5 +1,11 @@
 import { defineConfig } from '@playwright/test';
 
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config( { path: path.resolve(__dirname, '.env') } );
+
+export const BASE_URL = process.env.BASE_URL;
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30000,
