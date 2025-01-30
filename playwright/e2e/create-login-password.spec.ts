@@ -18,7 +18,7 @@ test.describe('Create Login Password Page', () => {
         expect(createLoginPage.createLoginPasswordLocators.submitButton).toBeVisible();
     })
 
-    test('should ensure that password input field is equal to confirm password input field and passwords are valid', async ({ page }) => {
+    test('should ensure that password validation is met', async ({ page }) => {
         
         await page.fill('[name="password"]', 'HeElopassword12@$');
         const password = await page.inputValue('[name="password"]');
@@ -37,9 +37,21 @@ test.describe('Create Login Password Page', () => {
         }
 
         expect(password).toBe(confirmPassword);
+        expect(password.length).toBeGreaterThan(8);
         expect(isPasswordValid).toBe(true);
+      
         expect(isConfirmPasswordValid).toBe(true);
-        
+    })
+
+    test('should ensure password inputs are not null ', async ({ page }) => {
+        const password = await page.inputValue('[name="password"]');
+        const confirmPassword = await page.inputValue('[name="confirmpassword"]');
+        await page.fill('[name="password"]', '');
+        await page.fill('[name="confirmpassword"]', '');
+        expect(password).not.toBeNull()
+        expect(confirmPassword).not.toBeNull()
+        await page.getByRole('button', { name: 'Create Password' }).click();
+        expect(page.locator('text=Password is required')).toBeVisible();
     })
 })
 
