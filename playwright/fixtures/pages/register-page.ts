@@ -13,7 +13,8 @@ export class RegisterPage {
         nationalityInput: this.page.locator('select[name="nationality"]'),
         idOrPassportInput: this.page.locator('[name="idOrPassport"]'),
         addresInput: this.page.locator('[name="address"]'),
-        dateOfBirthInput: this.page.locator('div').filter({ hasText: /^Date of Birth$/ })
+        dateOfBirthInput: this.page.locator('div').filter({ hasText: /^Date of Birth$/ }),
+        nextButton: this.page.locator('button').filter({ hasText: /^Next$/ }),
     }
 
     async goto(page:Page) {

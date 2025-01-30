@@ -14,3 +14,8 @@ export async function isValidPassowrd(password:string) {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S+$/;
     return regex.test(password)
 }
+
+export async function isValidName(name:string) {
+    const regex = /^[a-zA-Z\s]+$/;
+    return regex.test(name)
+}
