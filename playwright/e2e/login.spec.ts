@@ -54,5 +54,19 @@ test.describe('Login Page', () => {
     await page.getByRole('button', { name: 'Navigate to Update Password' }).click();
     await expect(page).toHaveURL(BASE_URL+'auth/updatepassword');
   })
+  test('should ensure navigation to the welcome page works', async({page}) => {
+    await page.getByRole('button', { name: 'Navigate to Welcome' }).click();
+    await expect(page).toHaveURL(BASE_URL+'welcome');
+  })
+
+  test('should ensure navigation to the register page works', async({page}) => {
+    await page.getByRole('link', { name: 'Get started' }).click();
+    await expect(page).toHaveURL(BASE_URL+'auth/register');
+  })
+
+  test('should ensure navigation to the forgot password page works', async({page}) => {
+    await page.getByRole('link', { name: 'Forgot password?' }).click();
+    await expect(page).toHaveURL(BASE_URL+'auth/forgotpassword');
+  })
 
 });
