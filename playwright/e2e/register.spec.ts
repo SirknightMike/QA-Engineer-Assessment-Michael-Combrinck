@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Register Page', () => {
 
-  test('should ensure all elements are visible', async ({ page }) => {
+  test('should ensure all elements are visible on register page', async ({ page }) => {
     const registerPage = new RegisterPage(page);
 
    await expect(registerPage.registerLocators.heading).toBeVisible();
@@ -95,6 +95,18 @@ test.describe('Register Page', () => {
       await page.getByRole('button', { name: 'Next' }).click();
 
       expect(page.locator('text=Parrnter 2 - Information')).toBeVisible();
+    })
+
+    test('all errors are displayed when no fields are filled and are null', async ({ page }) => {
+      await page.getByRole('button', { name: 'Next' }).click();
+
+      expect(page.locator('text=First name is required')).toBeVisible();
+      expect(page.locator('text=Last name is required')).toBeVisible();
+      expect(page.locator('text=Contact number is required')).toBeVisible();
+      expect(page.locator('text=Nationality is required')).toBeVisible();
+      expect(page.locator('text=ID or Passport number is required')).toBeVisible();
+      expect(page.locator('text=Address is required')).toBeVisible();
+      expect(page.locator('text=dateOfBirth must be a valid date is required')).toBeVisible();
     })
  
    

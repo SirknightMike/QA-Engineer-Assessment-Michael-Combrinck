@@ -3,17 +3,19 @@ import { BASE_URL } from '../playwright.config';
 import { LoginPage } from '../fixtures/pages/login-page';
 import { login } from '../utils/login';
 
+test.beforeEach(async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto(page);
+})
+
 test.describe('Login Page', () => {
   test('Check baseURL application', async ({ page }) => {
-    console.log('Current URL:', page.url());
     const loginPage = new LoginPage(page);
     await loginPage.goto(page);
    
   });
 
   test('validate error message when invalid credentials are entered', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto(page);
     await page.fill('[name="username"]', 'invaliduser@gmail.com');
     await page.fill('[name="password"]', 'passwordisnotvalid');
     await page.click('button[type="submit"]');
@@ -46,6 +48,11 @@ test.describe('Login Page', () => {
     await loginPage.goto(page);
     await page.click('text=Forgot password?');
     await expect(page).toHaveURL(BASE_URL+'auth/forgotpassword');
+  })
+
+  test('should ensure navigation to the update password page works', async({page}) => {
+    await page.getByRole('button', { name: 'Navigate to Update Password' }).click();
+    await expect(page).toHaveURL(BASE_URL+'auth/updatepassword');
   })
 
 });

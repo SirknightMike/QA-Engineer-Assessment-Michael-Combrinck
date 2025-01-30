@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Welcome Page', () => {
 
-  test('should ensure all elements are visible', async ({ page }) => {
+  test('should ensure all elements are visible on welcome page', async ({ page }) => {
    const welcomePage = new WelcomePage(page);
    
    expect(welcomePage.welcomeLocators.heading).toBeVisible();

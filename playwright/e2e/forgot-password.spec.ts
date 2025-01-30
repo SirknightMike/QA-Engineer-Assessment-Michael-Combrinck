@@ -4,7 +4,7 @@ import { BASE_URL } from "../playwright.config";
 
 test.describe('Forgot Password Page', () => {
 
-  test('should ensure all elements are visible', async ({ page }) => {
+  test('should ensure all elements are visible on forgot password page', async ({ page }) => {
    const forgotPasswordPage = new ForgotPasswordPage(page);
 
    await forgotPasswordPage.goto(page);

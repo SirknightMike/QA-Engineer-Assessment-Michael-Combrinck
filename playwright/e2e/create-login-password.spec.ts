@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('Create Login Password Page', () => { 
-    test('should ensure all elements are visible', async ({ page }) => {
+    test('should ensure all elements are visible on create login password page', async ({ page }) => {
         const createLoginPage = new CreateLoginPasswordPage(page);
     
         expect(createLoginPage.createLoginPasswordLocators.heading).toBeVisible();
