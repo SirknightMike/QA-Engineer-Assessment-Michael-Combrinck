@@ -9,3 +9,8 @@ export async function login(page: Page, username: string, password: string) {
     await page.fill('[name="password"]', password);
     await page.click('button[type="submit"]');
 }
+
+export async function isValidPassowrd(password:string) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S+$/;
+    return regex.test(password)
+}
