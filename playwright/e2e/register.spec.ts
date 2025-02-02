@@ -109,6 +109,78 @@ test.describe('Register Page', () => {
       expect(page.locator('text=dateOfBirth must be a valid date is required')).toBeVisible();
     })
  
+    test('mock GET /api/Patient/SignUp request', async ({ page }) => {
+      const mockSignUpResponse = {
+        success: true,
+        message: 'Sign-up successful',
+      };
+    
+      await page.route('**/api/Patient/SignUp?memberKey=Unknown&token=Unknown', (route) => {
+        route.fulfill({
+          status: 200, 
+          contentType: 'application/json',
+          body: JSON.stringify(mockSignUpResponse),
+        });
+      });
+    
+      await page.goto(BASE_URL+'auth/register'); 
+
+      const signUpSuccessMessage = await page.locator('text=Sign-up successful');
+      await expect(signUpSuccessMessage).toBeVisible();
+    });
+
+    test('mock POST /api/Patient/SignUp/PersonalDetails request', async ({ page }) => {
+      const registerPage = new RegisterPage(page);
+      const mockSignUpResponse = {
+        success: true,
+        message: 'Personal details saved successfully',
+      };
+   
+      await page.route('**/api/Patient/SignUp/PersonalDetails', (route, request) => {
+        const requestBody = request.postDataJSON();
+        console.log('Received request data:', requestBody);
+    
+        if (requestBody.firstName && requestBody.lastName && requestBody.contactNumber) {
+          route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify(mockSignUpResponse),
+          });
+        } else {
+          route.fulfill({
+            status: 400,
+            contentType: 'application/json',
+            body: JSON.stringify({
+              success: false,
+              message: 'Invalid personal details provided',
+            }),
+          });
+        }
+      });
+    
+
+      await registerPage.goto(page);
+    
+
+      await page.getByRole('textbox', { name: 'First Name' }).click();
+      await page.getByRole('textbox', { name: 'First Name' }).fill('Michael');
+      await page.getByRole('textbox', { name: 'Last Name' }).click();
+      await page.getByRole('textbox', { name: 'Last Name' }).fill('Combrinck');
+      await page.getByRole('textbox', { name: 'Contact Number' }).click();
+      await page.getByRole('textbox', { name: 'Contact Number' }).fill('+27 81 493 4932');
+      await page.getByLabel('Nationality').selectOption('South African');
+      await page.getByRole('textbox', { name: 'ID / Passport Number' }).click();
+      await page.getByRole('textbox', { name: 'ID / Passport Number' }).fill('0108035065086');
+      await page.getByRole('textbox', { name: 'Address' }).click();
+      await page.getByRole('textbox', { name: 'Address' }).fill('7 Big str');
+      await page.getByRole('button', { name: 'Choose date' }).click();
+      await page.getByRole('gridcell', { name: '20' }).click();
+      await page.getByRole('button', { name: '2021' }).click();
+      await page.getByRole('button', { name: 'Next' }).click();
+    
+      const successMessage = await page.locator('text=Personal details saved successfully');
+      await expect(successMessage).toBeVisible();
+    });
    
 
 });

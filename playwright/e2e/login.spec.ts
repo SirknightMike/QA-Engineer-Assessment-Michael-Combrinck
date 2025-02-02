@@ -69,4 +69,49 @@ test.describe('Login Page', () => {
     await expect(page).toHaveURL(BASE_URL+'auth/forgotpassword');
   })
 
+
+test('mock SignIn POST request with credentials', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const mockSignInResponse = {
+    success: true,
+    message: "Sign in successful",
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'test@gmail.com',
+    }
+  };
+
+  await page.route('**/api/Account/SignIn', (route, request) => {
+    
+    const requestBody = request.postDataJSON(); 
+
+
+    if (requestBody.username === 'test@gmail.com' && requestBody.password === 'password1') {
+      route.fulfill({
+        status: 200, 
+        contentType: 'application/json',
+        body: JSON.stringify(mockSignInResponse),
+      });
+    } else {
+      route.fulfill({
+        status: 400, 
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, message: 'Invalid credentials' }),
+      });
+    }
+    
+  });
+  await loginPage.goto(page)
+  await page.fill('input[name="username"]', 'test@gmail.com');
+  await page.fill('input[name="password"]', 'password1');
+  await page.check('input[name="rememberMe"]'); 
+  
+  await page.click('button[type="submit"]');
+
+  await expect(page).toHaveURL(BASE_URL+'dasboard');
+
+ 
+});
+
 });

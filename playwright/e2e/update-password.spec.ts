@@ -45,11 +45,56 @@ test.describe('Update Password Page', () => {
       })
 
   test('password input field validation works', async ({ page }) => {
-    const updatePasswordPage = new UpdatePasswordPage(page);
     await page.fill('[name="password"]', 'invalidpassword');
     await page.click('button[type="submit"]');
     await expect(page.locator('text=Password must contain atleast one lowercase, one uppercase, one number and a special character')).toBeVisible();
     await expect(page.locator('text=Password confirm is required')).toBeVisible();
   })
+
+test('mock POST /api/Account/UpdatePasswordWithToken request', async ({ page }) => {
+  const mockUpdatePasswordResponse = {
+    success: true,
+    message: 'Password updated successfully',
+  };
+
+  const mockFailureResponse = {
+    success: false,
+    message: 'Invalid token or user ID',
+  };
+
+  await page.route('**/api/Account/UpdatePasswordWithToken', (route, request) => {
+
+    const requestBody = request.postDataJSON();
+    console.log('Received request data:', requestBody);
+    if (
+      requestBody.password === requestBody.confirmpassword &&
+      requestBody.token !== 'Unknown' &&
+      requestBody.userId !== 'Unknown'
+    ) {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(mockUpdatePasswordResponse),
+      });
+    } else {
+     
+      route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify(mockFailureResponse),
+      });
+    }
+  });
+
+ 
+  await page.goto('http://localhost:3000/your-password-page'); 
+
+  await page.fill('[name="password"]', 'HeElopassword12@$');
+  await page.fill('[name="confirmpassword"]', 'HeElopassword12@$');
+  await page.getByRole('button', { name: 'Update Password' }).click();
+
+  await expect(page.locator('text=Password updated successfully')).toBeVisible();
+});
+
 
 });

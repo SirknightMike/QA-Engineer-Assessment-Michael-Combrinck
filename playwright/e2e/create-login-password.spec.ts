@@ -2,10 +2,10 @@ import test, { expect } from "@playwright/test";
 import { CreateLoginPasswordPage } from "../fixtures/pages/create-login-password-page";
 import { isValidPassowrd } from "../utils/login";
 
-test.beforeEach(async ({ page }) => {
-    const createLoginPage = new CreateLoginPasswordPage(page);
-    await createLoginPage.goto();
-})
+// test.beforeEach(async ({ page }) => {
+//     const createLoginPage = new CreateLoginPasswordPage(page);
+//     await createLoginPage.goto();
+// })
 
 test.describe('Create Login Password Page', () => { 
     test('should ensure all elements are visible on create login password page', async ({ page }) => {
